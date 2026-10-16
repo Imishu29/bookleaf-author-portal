@@ -58,7 +58,9 @@ Key decisions
 
 ## AI integration
 
-**Model choice:** Anthropic Claude Haiku (`AI_MODEL`, default `claude-haiku-5-5`). Both tasks are short, structured, latency-sensitive and high-volume (1,200+ books/month), so a small, cheap model is the right fit; the knowledge base supplies the domain accuracy, not model size. The model is a single env var, so swapping up or to another provider only touches `llmClient.js`.
+**Providers:** Anthropic (`ANTHROPIC_API_KEY`) or Google Gemini (`GEMINI_API_KEY`, free tier at aistudio.google.com/apikey), chosen by whichever key is set (or `AI_PROVIDER`). Adapters live in `llmClient.js`; the rest of the AI code is provider-agnostic.
+
+**Model choice:** a small, fast model: Claude Haiku (`claude-haiku-5-5`) or Gemini Flash (`gemini-2.5-flash`), overridable with `AI_MODEL`. Both tasks are short, structured, latency-sensitive and high-volume (1,200+ books/month), so a small, cheap model is the right fit; the knowledge base supplies the domain accuracy, not model size. The model is a single env var, so swapping up or to another provider only touches `llmClient.js`.
 
 **Two separate calls, different cost profiles**
 1. *Classification + priority* (`classifier.js`): one call returns `{category, priority, reason}` as strict JSON. The prompt contains category/priority *definitions only* (no knowledge base, no author PII, message truncated to 1,500 chars), `max_tokens` 120, `temperature` 0. Output is validated against the allowed enums; anything else is rejected → fallback.
@@ -76,7 +78,7 @@ Key decisions
 - the draft falls back to a policy-correct template (banner: *"AI unavailable – review and personalise"*),
 - the admin can always write the reply manually. Tickets are never blocked by AI.
 
-**Key security:** `ANTHROPIC_API_KEY` is read from the server environment only. It is never sent to the browser, never logged, and `.env` is git-ignored. The app runs without a key (fallback mode) – `/api/health` reports `ai: configured | fallback-mode`.
+**Key security:** The AI key (`GEMINI_API_KEY` / `ANTHROPIC_API_KEY`) is read from the server environment only. It is never sent to the browser, never logged, and `.env` is git-ignored. The app runs without a key (fallback mode) – `/api/health` reports `ai: configured | fallback-mode`.
 
 **Overrides:** admins can change category and priority; the change is stored with `categorySource/prioritySource = admin` (so override rate is measurable) and survives later AI re-runs unless "Re-run AI triage" is pressed.
 
