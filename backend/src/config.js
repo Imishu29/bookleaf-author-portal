@@ -6,7 +6,7 @@ const geminiKey = process.env.GEMINI_API_KEY || '';
 // Provider is explicit via AI_PROVIDER, otherwise inferred from whichever key is set.
 const provider = process.env.AI_PROVIDER || (anthropicKey ? 'anthropic' : geminiKey ? 'gemini' : 'none');
 
-const DEFAULT_MODELS = { anthropic: 'claude-haiku-5-5', gemini: 'gemini-2.5-flash', none: '' };
+const DEFAULT_MODELS = { anthropic: 'claude-haiku-5-5', gemini: 'gemini-3.5-flash', none: '' };
 
 const config = {
   port: Number(process.env.PORT) || 4000,

@@ -3,3 +3,6 @@ dist/
 .angular/
 .env
 *.log
+
+# Personal interview prep (do not publish)
+interview-prep/

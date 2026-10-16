@@ -20,6 +20,7 @@ const day = (n) => new Date(Date.now() - n * 24 * 3600 * 1000);
 
 async function main() {
   await mongoose.connect(config.mongoUri);
+  console.log(`Seeding database "${mongoose.connection.name}" on host ${mongoose.connection.host}`);
   await Promise.all([Author, Book, User, Ticket, mongoose.connection.collection('counters')].map((m) => (m.deleteMany ? m.deleteMany({}) : m.drop().catch(() => {}))));
 
   const authorHash = await User.hashPassword(AUTHOR_PASSWORD);
