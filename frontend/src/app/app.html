@@ -1,0 +1,19 @@
+@if (auth.user(); as user) {
+  <header class="topbar">
+    <div class="brand">📖 BookLeaf <span class="muted">{{ user.role === 'admin' ? 'Ops Console' : 'Author Portal' }}</span></div>
+    <nav>
+      @if (user.role === 'author') {
+        <a routerLink="/author/books" routerLinkActive="active">My Books</a>
+        <a routerLink="/author/tickets/new" routerLinkActive="active">New Query</a>
+        <a routerLink="/author/tickets" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">My Tickets</a>
+      } @else {
+        <a routerLink="/admin/tickets" routerLinkActive="active">Ticket Queue</a>
+      }
+    </nav>
+    <div class="who">
+      <span>{{ user.name }}</span>
+      <button class="btn small ghost" (click)="auth.logout()">Log out</button>
+    </div>
+  </header>
+}
+<main class="container"><router-outlet /></main>
